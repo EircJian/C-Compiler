@@ -1,0 +1,5774 @@
+Nonterminals useless in grammar
+
+   opt_for_var_decl
+
+
+Terminals unused in grammar
+
+   EMPTYSTRING
+   TYPE_LONGLONG
+   KEY_STRUCT
+   SINGLE_COMMENT
+   MULTIPLE_COMMENT
+   OP_POSTFIXINCREMENT
+   OP_POSTFIXDECREMENT
+
+
+State 19 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: decl
+    2        | decl func_defs
+    3        | func_defs
+
+    4 func_defs: func_def func_defs
+    5          | func_def
+
+    6 decl: var_decl
+    7     | func_decl
+    8     | decl var_decl
+    9     | decl func_decl
+
+   10 var_decl: whole_data_type scalar_decl ';'
+   11         | whole_data_type array_decl ';'
+
+   12 scalar_decl: scalar_decl ',' decl_identifier initializer
+   13            | decl_identifier initializer
+
+   14 decl_identifier: '*' IDENTIFIER
+   15                | IDENTIFIER
+
+   16 initializer: '=' expr
+   17            | %empty
+
+   18 array_decl: array_decl ',' IDENTIFIER array_dimension array_initializer
+   19           | IDENTIFIER array_dimension array_initializer
+
+   20 array_dimension: '[' expr ']' array_dimension
+   21                | '[' expr ']'
+
+   22 array_initializer: '=' '{' number_list '}'
+   23                  | '=' '{' '}'
+   24                  | %empty
+
+   25 number_list: exprs
+   26            | '{' number_list '}' ',' number_list
+   27            | '{' number_list '}'
+
+   28 func_decl: whole_data_type decl_identifier '(' parameter_list ')' ';'
+   29          | whole_data_type decl_identifier '(' ')' ';'
+
+   30 parameter_list: parameter_list ',' parameter_whole_data_type decl_identifier
+   31               | parameter_whole_data_type decl_identifier
+
+   32 parameter_whole_data_type: whole_data_type
+
+   33 whole_data_type: const_or_not signed_or_not int_specifier TYPE_INT
+   34                | const_or_not signed_or_not ll_l_sh_ch
+   35                | const_or_not signed_unsigned_float_double_void
+   36                | TYPE_CONST
+
+   37 const_or_not: TYPE_CONST
+   38             | %empty
+
+   39 signed_or_not: TYPE_SIGNED
+   40              | TYPE_UNSIGNED
+   41              | %empty
+
+   42 int_specifier: TYPE_LONG TYPE_LONG
+   43              | TYPE_LONG
+   44              | TYPE_SHORT
+   45              | %empty
+
+   46 ll_l_sh_ch: TYPE_LONG TYPE_LONG
+   47           | TYPE_LONG
+   48           | TYPE_SHORT
+   49           | TYPE_CHAR
+   50           | TYPE_CHAR4
+   51           | TYPE_CHAR8
+
+   52 signed_unsigned_float_double_void: TYPE_SIGNED
+   53                                  | TYPE_UNSIGNED
+   54                                  | TYPE_FLOAT
+   55                                  | TYPE_DOUBLE
+   56                                  | TYPE_VOID
+
+   57 func_def: func_def_header func_def_compound_stmt
+
+   58 func_name_decl: whole_data_type decl_identifier
+
+   59 func_def_header: func_name_decl parameter_list '(' ')'
+   60                | func_name_decl '(' ')'
+
+   61 func_def_compound_stmt: compound_stmt
+
+   62 expr: arithmetic_expr
+   63     | bitwise_expr
+   64     | logical_expr
+   65     | variable
+   66     | literal
+   67     | '(' expr ')'
+   68     | assign_expr
+   69     | function_call
+   70     | address_of
+   71     | dereference
+   72     | increment
+   73     | decrement
+   74     | type_cast
+   75     | KEY_NULL
+
+   76 arithmetic_expr: expr '+' expr
+   77                | expr '-' expr
+   78                | expr '*' expr
+   79                | expr '/' expr
+   80                | expr '%' expr
+   81                | '-' expr
+   82                | '+' expr
+
+   83 bitwise_expr: '~' expr
+   84             | expr '&' expr
+   85             | expr '^' expr
+   86             | expr '|' expr
+   87             | expr OP_SHIFTLEFT expr
+   88             | expr OP_SHIFTRIGHT expr
+
+   89 logical_expr: '!' expr
+   90             | expr OP_LOGICALOR expr
+   91             | expr OP_LOGICALAND expr
+   92             | expr OP_EQUAL expr
+   93             | expr OP_NOTEQUAL expr
+   94             | expr OP_LESSEQUAL expr
+   95             | expr OP_GREATEREQUAL expr
+   96             | expr '<' expr
+   97             | expr '>' expr
+
+   98 assign_expr: expr '=' expr
+
+   99 function_call: expr '(' exprs ')'
+  100              | expr '(' ')'
+
+  101 address_of: '&' expr
+
+  102 dereference: '*' expr
+
+  103 increment: OP_INCREMENT expr
+  104          | expr OP_INCREMENT
+
+  105 decrement: OP_DECREMENT expr
+  106          | expr OP_DECREMENT
+
+  107 type_cast: '(' whole_data_type ')' expr
+  108          | '(' whole_data_type '*' ')' expr
+
+  109 array_access: IDENTIFIER array_dimension
+
+  110 variable: IDENTIFIER
+  111         | array_access
+
+  112 literal: INTEGER
+  113        | FLOATINGPOINT
+  114        | CHARACTER
+  115        | STRING
+
+  116 exprs: exprs ',' expr
+  117      | expr
+
+  118 stmt: expr_stmt
+  119     | if_else_stmt
+  120     | switch_stmt
+  121     | while_stmt
+  122     | for_stmt
+  123     | KEY_RETURN expr ';'
+  124     | KEY_RETURN ';'
+  125     | KEY_BREAK ';'
+  126     | KEY_CONTINUE ';'
+  127     | compound_stmt
+
+  128 expr_stmt: expr ';'
+
+  129 if_else_stmt: KEY_IF '(' expr ')' compound_stmt
+  130             | KEY_IF '(' expr ')' compound_stmt KEY_ELSE compound_stmt
+
+  131 switch_stmt: KEY_SWITCH '(' expr ')' '{' switch_clauses '}'
+
+  132 switch_clauses: KEY_CASE expr ':' stmts switch_clauses
+  133               | KEY_CASE expr ':' stmts
+  134               | KEY_DEFAULT ':' stmts switch_clauses
+  135               | KEY_DEFAULT ':' stmts
+
+  136 stmts: stmt stmts
+  137      | stmt
+
+  138 while_stmt: KEY_WHILE '(' expr ')' stmt
+  139           | KEY_DO stmt KEY_WHILE '(' expr ')' ';'
+
+  140 for_stmt: KEY_FOR '(' expr_or_noexpr ';' expr_or_noexpr ';' expr_or_noexpr ')' stmt
+
+  141 expr_or_noexpr: expr
+  142               | %empty
+
+  143 compound_stmt: '{' '}'
+  144              | '{' in_compound '}'
+
+  145 in_compound: var_decl in_compound
+  146            | var_decl
+  147            | stmt in_compound
+  148            | stmt
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 89
+'%' (37) 80
+'&' (38) 84 101
+'(' (40) 28 29 59 60 67 99 100 107 108 129 130 131 138 139 140
+')' (41) 28 29 59 60 67 99 100 107 108 129 130 131 138 139 140
+'*' (42) 14 78 102 108
+'+' (43) 76 82
+',' (44) 12 18 26 30 116
+'-' (45) 77 81
+'/' (47) 79
+':' (58) 132 133 134 135
+';' (59) 10 11 28 29 123 124 125 126 128 139 140
+'<' (60) 96
+'=' (61) 16 22 23 98
+'>' (62) 97
+'[' (91) 20 21
+']' (93) 20 21
+'^' (94) 85
+'{' (123) 22 23 26 27 131 143 144
+'|' (124) 86
+'}' (125) 22 23 26 27 131 143 144
+'~' (126) 83
+error (256)
+EMPTYSTRING (258)
+TYPE_INT (259) 33
+TYPE_LONGLONG (260)
+TYPE_LONG (261) 42 43 46 47
+TYPE_SHORT (262) 44 48
+TYPE_CHAR (263) 49
+TYPE_CHAR4 (264) 50
+TYPE_CHAR8 (265) 51
+TYPE_SIGNED (266) 39 52
+TYPE_UNSIGNED (267) 40 53
+TYPE_FLOAT (268) 54
+TYPE_DOUBLE (269) 55
+TYPE_VOID (270) 56
+TYPE_CONST (271) 36 37
+KEY_FOR (272) 140
+KEY_DO (273) 139
+KEY_WHILE (274) 138 139
+KEY_BREAK (275) 125
+KEY_CONTINUE (276) 126
+KEY_IF (277) 129 130
+KEY_ELSE (278) 130
+KEY_RETURN (279) 123 124
+KEY_STRUCT (280)
+KEY_SWITCH (281) 131
+KEY_CASE (282) 132 133
+KEY_DEFAULT (283) 134 135
+KEY_NULL (284) 75
+INTEGER (285) 112
+SINGLE_COMMENT (286)
+MULTIPLE_COMMENT (287)
+IDENTIFIER (288) 14 15 18 19 109 110
+FLOATINGPOINT (289) 113
+STRING (290) 115
+CHARACTER (291) 114
+OP_LOGICALOR (292) 90
+OP_LOGICALAND (293) 91
+OP_EQUAL (294) 92
+OP_NOTEQUAL (295) 93
+OP_LESSEQUAL (296) 94
+OP_GREATEREQUAL (297) 95
+OP_SHIFTRIGHT (298) 88
+OP_SHIFTLEFT (299) 87
+UMINUS (300)
+UPLUS (301)
+OP_INCREMENT (302) 103 104
+OP_DECREMENT (303) 105 106
+OP_POSTFIXINCREMENT (304)
+OP_POSTFIXDECREMENT (305)
+
+
+Nonterminals, with rules where they appear
+
+$accept (73)
+    on left: 0
+program (74)
+    on left: 1 2 3, on right: 0
+func_defs (75)
+    on left: 4 5, on right: 2 3 4
+decl (76)
+    on left: 6 7 8 9, on right: 1 2 8 9
+var_decl (77)
+    on left: 10 11, on right: 6 8 145 146
+scalar_decl (78)
+    on left: 12 13, on right: 10 12
+decl_identifier (79)
+    on left: 14 15, on right: 12 13 28 29 30 31 58
+initializer (80)
+    on left: 16 17, on right: 12 13
+array_decl (81)
+    on left: 18 19, on right: 11 18
+array_dimension (82)
+    on left: 20 21, on right: 18 19 20 109
+array_initializer (83)
+    on left: 22 23 24, on right: 18 19
+number_list (84)
+    on left: 25 26 27, on right: 22 26 27
+func_decl (85)
+    on left: 28 29, on right: 7 9
+parameter_list (86)
+    on left: 30 31, on right: 28 30 59
+parameter_whole_data_type (87)
+    on left: 32, on right: 30 31
+whole_data_type (88)
+    on left: 33 34 35 36, on right: 10 11 28 29 32 58 107 108
+const_or_not (89)
+    on left: 37 38, on right: 33 34 35
+signed_or_not (90)
+    on left: 39 40 41, on right: 33 34
+int_specifier (91)
+    on left: 42 43 44 45, on right: 33
+ll_l_sh_ch (92)
+    on left: 46 47 48 49 50 51, on right: 34
+signed_unsigned_float_double_void (93)
+    on left: 52 53 54 55 56, on right: 35
+func_def (94)
+    on left: 57, on right: 4 5
+func_name_decl (95)
+    on left: 58, on right: 59 60
+func_def_header (96)
+    on left: 59 60, on right: 57
+func_def_compound_stmt (97)
+    on left: 61, on right: 57
+expr (98)
+    on left: 62 63 64 65 66 67 68 69 70 71 72 73 74 75, on right: 16
+    20 21 67 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93
+    94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 116 117 123
+    128 129 130 131 132 133 138 139 141
+arithmetic_expr (99)
+    on left: 76 77 78 79 80 81 82, on right: 62
+bitwise_expr (100)
+    on left: 83 84 85 86 87 88, on right: 63
+logical_expr (101)
+    on left: 89 90 91 92 93 94 95 96 97, on right: 64
+assign_expr (102)
+    on left: 98, on right: 68
+function_call (103)
+    on left: 99 100, on right: 69
+address_of (104)
+    on left: 101, on right: 70
+dereference (105)
+    on left: 102, on right: 71
+increment (106)
+    on left: 103 104, on right: 72
+decrement (107)
+    on left: 105 106, on right: 73
+type_cast (108)
+    on left: 107 108, on right: 74
+array_access (109)
+    on left: 109, on right: 111
+variable (110)
+    on left: 110 111, on right: 65
+literal (111)
+    on left: 112 113 114 115, on right: 66
+exprs (112)
+    on left: 116 117, on right: 25 99 116
+stmt (113)
+    on left: 118 119 120 121 122 123 124 125 126 127, on right: 136
+    137 138 139 140 147 148
+expr_stmt (114)
+    on left: 128, on right: 118
+if_else_stmt (115)
+    on left: 129 130, on right: 119
+switch_stmt (116)
+    on left: 131, on right: 120
+switch_clauses (117)
+    on left: 132 133 134 135, on right: 131 132 134
+stmts (118)
+    on left: 136 137, on right: 132 133 134 135 136
+while_stmt (119)
+    on left: 138 139, on right: 121
+for_stmt (120)
+    on left: 140, on right: 122
+expr_or_noexpr (121)
+    on left: 141 142, on right: 140
+compound_stmt (122)
+    on left: 143 144, on right: 61 127 129 130
+in_compound (123)
+    on left: 145 146 147 148, on right: 144 145 147
+
+
+State 0
+
+    0 $accept: . program $end
+
+    TYPE_CONST  shift, and go to state 1
+
+    $default  reduce using rule 38 (const_or_not)
+
+    program          go to state 2
+    func_defs        go to state 3
+    decl             go to state 4
+    var_decl         go to state 5
+    func_decl        go to state 6
+    whole_data_type  go to state 7
+    const_or_not     go to state 8
+    func_def         go to state 9
+    func_name_decl   go to state 10
+    func_def_header  go to state 11
+
+
+State 1
+
+   36 whole_data_type: TYPE_CONST .
+   37 const_or_not: TYPE_CONST .
+
+    IDENTIFIER  reduce using rule 36 (whole_data_type)
+    '*'         reduce using rule 36 (whole_data_type)
+    ')'         reduce using rule 36 (whole_data_type)
+    $default    reduce using rule 37 (const_or_not)
+
+
+State 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 12
+
+
+State 3
+
+    3 program: func_defs .
+
+    $default  reduce using rule 3 (program)
+
+
+State 4
+
+    1 program: decl .
+    2        | decl . func_defs
+    8 decl: decl . var_decl
+    9     | decl . func_decl
+
+    TYPE_CONST  shift, and go to state 1
+
+    $end      reduce using rule 1 (program)
+    $default  reduce using rule 38 (const_or_not)
+
+    func_defs        go to state 13
+    var_decl         go to state 14
+    func_decl        go to state 15
+    whole_data_type  go to state 7
+    const_or_not     go to state 8
+    func_def         go to state 9
+    func_name_decl   go to state 10
+    func_def_header  go to state 11
+
+
+State 5
+
+    6 decl: var_decl .
+
+    $default  reduce using rule 6 (decl)
+
+
+State 6
+
+    7 decl: func_decl .
+
+    $default  reduce using rule 7 (decl)
+
+
+State 7
+
+   10 var_decl: whole_data_type . scalar_decl ';'
+   11         | whole_data_type . array_decl ';'
+   28 func_decl: whole_data_type . decl_identifier '(' parameter_list ')' ';'
+   29          | whole_data_type . decl_identifier '(' ')' ';'
+   58 func_name_decl: whole_data_type . decl_identifier
+
+    IDENTIFIER  shift, and go to state 16
+    '*'         shift, and go to state 17
+
+    scalar_decl      go to state 18
+    decl_identifier  go to state 19
+    array_decl       go to state 20
+
+
+State 8
+
+   33 whole_data_type: const_or_not . signed_or_not int_specifier TYPE_INT
+   34                | const_or_not . signed_or_not ll_l_sh_ch
+   35                | const_or_not . signed_unsigned_float_double_void
+
+    TYPE_SIGNED    shift, and go to state 21
+    TYPE_UNSIGNED  shift, and go to state 22
+    TYPE_FLOAT     shift, and go to state 23
+    TYPE_DOUBLE    shift, and go to state 24
+    TYPE_VOID      shift, and go to state 25
+
+    $default  reduce using rule 41 (signed_or_not)
+
+    signed_or_not                      go to state 26
+    signed_unsigned_float_double_void  go to state 27
+
+
+State 9
+
+    4 func_defs: func_def . func_defs
+    5          | func_def .
+
+    TYPE_CONST  shift, and go to state 1
+
+    $end      reduce using rule 5 (func_defs)
+    $default  reduce using rule 38 (const_or_not)
+
+    func_defs        go to state 28
+    whole_data_type  go to state 29
+    const_or_not     go to state 8
+    func_def         go to state 9
+    func_name_decl   go to state 10
+    func_def_header  go to state 11
+
+
+State 10
+
+   59 func_def_header: func_name_decl . parameter_list '(' ')'
+   60                | func_name_decl . '(' ')'
+
+    TYPE_CONST  shift, and go to state 1
+    '('         shift, and go to state 30
+
+    $default  reduce using rule 38 (const_or_not)
+
+    parameter_list             go to state 31
+    parameter_whole_data_type  go to state 32
+    whole_data_type            go to state 33
+    const_or_not               go to state 8
+
+
+State 11
+
+   57 func_def: func_def_header . func_def_compound_stmt
+
+    '{'  shift, and go to state 34
+
+    func_def_compound_stmt  go to state 35
+    compound_stmt           go to state 36
+
+
+State 12
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 13
+
+    2 program: decl func_defs .
+
+    $default  reduce using rule 2 (program)
+
+
+State 14
+
+    8 decl: decl var_decl .
+
+    $default  reduce using rule 8 (decl)
+
+
+State 15
+
+    9 decl: decl func_decl .
+
+    $default  reduce using rule 9 (decl)
+
+
+State 16
+
+   15 decl_identifier: IDENTIFIER .
+   19 array_decl: IDENTIFIER . array_dimension array_initializer
+
+    '['  shift, and go to state 37
+
+    $default  reduce using rule 15 (decl_identifier)
+
+    array_dimension  go to state 38
+
+
+State 17
+
+   14 decl_identifier: '*' . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 39
+
+
+State 18
+
+   10 var_decl: whole_data_type scalar_decl . ';'
+   12 scalar_decl: scalar_decl . ',' decl_identifier initializer
+
+    ';'  shift, and go to state 40
+    ','  shift, and go to state 41
+
+
+State 19
+
+   13 scalar_decl: decl_identifier . initializer
+   28 func_decl: whole_data_type decl_identifier . '(' parameter_list ')' ';'
+   29          | whole_data_type decl_identifier . '(' ')' ';'
+   58 func_name_decl: whole_data_type decl_identifier .
+
+    '='  shift, and go to state 42
+    '('  shift, and go to state 43
+
+    ';'       reduce using rule 17 (initializer)
+    ','       reduce using rule 17 (initializer)
+    '('       [reduce using rule 58 (func_name_decl)]
+    $default  reduce using rule 58 (func_name_decl)
+
+    initializer  go to state 44
+
+
+State 20
+
+   11 var_decl: whole_data_type array_decl . ';'
+   18 array_decl: array_decl . ',' IDENTIFIER array_dimension array_initializer
+
+    ';'  shift, and go to state 45
+    ','  shift, and go to state 46
+
+
+State 21
+
+   39 signed_or_not: TYPE_SIGNED .
+   52 signed_unsigned_float_double_void: TYPE_SIGNED .
+
+    IDENTIFIER  reduce using rule 52 (signed_unsigned_float_double_void)
+    '*'         reduce using rule 52 (signed_unsigned_float_double_void)
+    ')'         reduce using rule 52 (signed_unsigned_float_double_void)
+    $default    reduce using rule 39 (signed_or_not)
+
+
+State 22
+
+   40 signed_or_not: TYPE_UNSIGNED .
+   53 signed_unsigned_float_double_void: TYPE_UNSIGNED .
+
+    IDENTIFIER  reduce using rule 53 (signed_unsigned_float_double_void)
+    '*'         reduce using rule 53 (signed_unsigned_float_double_void)
+    ')'         reduce using rule 53 (signed_unsigned_float_double_void)
+    $default    reduce using rule 40 (signed_or_not)
+
+
+State 23
+
+   54 signed_unsigned_float_double_void: TYPE_FLOAT .
+
+    $default  reduce using rule 54 (signed_unsigned_float_double_void)
+
+
+State 24
+
+   55 signed_unsigned_float_double_void: TYPE_DOUBLE .
+
+    $default  reduce using rule 55 (signed_unsigned_float_double_void)
+
+
+State 25
+
+   56 signed_unsigned_float_double_void: TYPE_VOID .
+
+    $default  reduce using rule 56 (signed_unsigned_float_double_void)
+
+
+State 26
+
+   33 whole_data_type: const_or_not signed_or_not . int_specifier TYPE_INT
+   34                | const_or_not signed_or_not . ll_l_sh_ch
+
+    TYPE_LONG   shift, and go to state 47
+    TYPE_SHORT  shift, and go to state 48
+    TYPE_CHAR   shift, and go to state 49
+    TYPE_CHAR4  shift, and go to state 50
+    TYPE_CHAR8  shift, and go to state 51
+
+    $default  reduce using rule 45 (int_specifier)
+
+    int_specifier  go to state 52
+    ll_l_sh_ch     go to state 53
+
+
+State 27
+
+   35 whole_data_type: const_or_not signed_unsigned_float_double_void .
+
+    $default  reduce using rule 35 (whole_data_type)
+
+
+State 28
+
+    4 func_defs: func_def func_defs .
+
+    $default  reduce using rule 4 (func_defs)
+
+
+State 29
+
+   58 func_name_decl: whole_data_type . decl_identifier
+
+    IDENTIFIER  shift, and go to state 54
+    '*'         shift, and go to state 17
+
+    decl_identifier  go to state 55
+
+
+State 30
+
+   60 func_def_header: func_name_decl '(' . ')'
+
+    ')'  shift, and go to state 56
+
+
+State 31
+
+   30 parameter_list: parameter_list . ',' parameter_whole_data_type decl_identifier
+   59 func_def_header: func_name_decl parameter_list . '(' ')'
+
+    ','  shift, and go to state 57
+    '('  shift, and go to state 58
+
+
+State 32
+
+   31 parameter_list: parameter_whole_data_type . decl_identifier
+
+    IDENTIFIER  shift, and go to state 54
+    '*'         shift, and go to state 17
+
+    decl_identifier  go to state 59
+
+
+State 33
+
+   32 parameter_whole_data_type: whole_data_type .
+
+    $default  reduce using rule 32 (parameter_whole_data_type)
+
+
+State 34
+
+  143 compound_stmt: '{' . '}'
+  144              | '{' . in_compound '}'
+
+    TYPE_CONST     shift, and go to state 1
+    '{'            shift, and go to state 34
+    '}'            shift, and go to state 60
+    KEY_FOR        shift, and go to state 61
+    KEY_DO         shift, and go to state 62
+    KEY_WHILE      shift, and go to state 63
+    KEY_BREAK      shift, and go to state 64
+    KEY_CONTINUE   shift, and go to state 65
+    KEY_IF         shift, and go to state 66
+    KEY_RETURN     shift, and go to state 67
+    KEY_SWITCH     shift, and go to state 68
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    $default  reduce using rule 38 (const_or_not)
+
+    var_decl         go to state 84
+    whole_data_type  go to state 85
+    const_or_not     go to state 8
+    expr             go to state 86
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    stmt             go to state 100
+    expr_stmt        go to state 101
+    if_else_stmt     go to state 102
+    switch_stmt      go to state 103
+    while_stmt       go to state 104
+    for_stmt         go to state 105
+    compound_stmt    go to state 106
+    in_compound      go to state 107
+
+
+State 35
+
+   57 func_def: func_def_header func_def_compound_stmt .
+
+    $default  reduce using rule 57 (func_def)
+
+
+State 36
+
+   61 func_def_compound_stmt: compound_stmt .
+
+    $default  reduce using rule 61 (func_def_compound_stmt)
+
+
+State 37
+
+   20 array_dimension: '[' . expr ']' array_dimension
+   21                | '[' . expr ']'
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 108
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 38
+
+   19 array_decl: IDENTIFIER array_dimension . array_initializer
+
+    '='  shift, and go to state 109
+
+    $default  reduce using rule 24 (array_initializer)
+
+    array_initializer  go to state 110
+
+
+State 39
+
+   14 decl_identifier: '*' IDENTIFIER .
+
+    $default  reduce using rule 14 (decl_identifier)
+
+
+State 40
+
+   10 var_decl: whole_data_type scalar_decl ';' .
+
+    $default  reduce using rule 10 (var_decl)
+
+
+State 41
+
+   12 scalar_decl: scalar_decl ',' . decl_identifier initializer
+
+    IDENTIFIER  shift, and go to state 54
+    '*'         shift, and go to state 17
+
+    decl_identifier  go to state 111
+
+
+State 42
+
+   16 initializer: '=' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 112
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 43
+
+   28 func_decl: whole_data_type decl_identifier '(' . parameter_list ')' ';'
+   29          | whole_data_type decl_identifier '(' . ')' ';'
+
+    TYPE_CONST  shift, and go to state 1
+    ')'         shift, and go to state 113
+
+    $default  reduce using rule 38 (const_or_not)
+
+    parameter_list             go to state 114
+    parameter_whole_data_type  go to state 32
+    whole_data_type            go to state 33
+    const_or_not               go to state 8
+
+
+State 44
+
+   13 scalar_decl: decl_identifier initializer .
+
+    $default  reduce using rule 13 (scalar_decl)
+
+
+State 45
+
+   11 var_decl: whole_data_type array_decl ';' .
+
+    $default  reduce using rule 11 (var_decl)
+
+
+State 46
+
+   18 array_decl: array_decl ',' . IDENTIFIER array_dimension array_initializer
+
+    IDENTIFIER  shift, and go to state 115
+
+
+State 47
+
+   42 int_specifier: TYPE_LONG . TYPE_LONG
+   43              | TYPE_LONG .
+   46 ll_l_sh_ch: TYPE_LONG . TYPE_LONG
+   47           | TYPE_LONG .
+
+    TYPE_LONG  shift, and go to state 116
+
+    TYPE_INT  reduce using rule 43 (int_specifier)
+    $default  reduce using rule 47 (ll_l_sh_ch)
+
+
+State 48
+
+   44 int_specifier: TYPE_SHORT .
+   48 ll_l_sh_ch: TYPE_SHORT .
+
+    TYPE_INT  reduce using rule 44 (int_specifier)
+    $default  reduce using rule 48 (ll_l_sh_ch)
+
+
+State 49
+
+   49 ll_l_sh_ch: TYPE_CHAR .
+
+    $default  reduce using rule 49 (ll_l_sh_ch)
+
+
+State 50
+
+   50 ll_l_sh_ch: TYPE_CHAR4 .
+
+    $default  reduce using rule 50 (ll_l_sh_ch)
+
+
+State 51
+
+   51 ll_l_sh_ch: TYPE_CHAR8 .
+
+    $default  reduce using rule 51 (ll_l_sh_ch)
+
+
+State 52
+
+   33 whole_data_type: const_or_not signed_or_not int_specifier . TYPE_INT
+
+    TYPE_INT  shift, and go to state 117
+
+
+State 53
+
+   34 whole_data_type: const_or_not signed_or_not ll_l_sh_ch .
+
+    $default  reduce using rule 34 (whole_data_type)
+
+
+State 54
+
+   15 decl_identifier: IDENTIFIER .
+
+    $default  reduce using rule 15 (decl_identifier)
+
+
+State 55
+
+   58 func_name_decl: whole_data_type decl_identifier .
+
+    $default  reduce using rule 58 (func_name_decl)
+
+
+State 56
+
+   60 func_def_header: func_name_decl '(' ')' .
+
+    $default  reduce using rule 60 (func_def_header)
+
+
+State 57
+
+   30 parameter_list: parameter_list ',' . parameter_whole_data_type decl_identifier
+
+    TYPE_CONST  shift, and go to state 1
+
+    $default  reduce using rule 38 (const_or_not)
+
+    parameter_whole_data_type  go to state 118
+    whole_data_type            go to state 33
+    const_or_not               go to state 8
+
+
+State 58
+
+   59 func_def_header: func_name_decl parameter_list '(' . ')'
+
+    ')'  shift, and go to state 119
+
+
+State 59
+
+   31 parameter_list: parameter_whole_data_type decl_identifier .
+
+    $default  reduce using rule 31 (parameter_list)
+
+
+State 60
+
+  143 compound_stmt: '{' '}' .
+
+    $default  reduce using rule 143 (compound_stmt)
+
+
+State 61
+
+  140 for_stmt: KEY_FOR . '(' expr_or_noexpr ';' expr_or_noexpr ';' expr_or_noexpr ')' stmt
+
+    '('  shift, and go to state 120
+
+
+State 62
+
+  139 while_stmt: KEY_DO . stmt KEY_WHILE '(' expr ')' ';'
+
+    '{'            shift, and go to state 34
+    KEY_FOR        shift, and go to state 61
+    KEY_DO         shift, and go to state 62
+    KEY_WHILE      shift, and go to state 63
+    KEY_BREAK      shift, and go to state 64
+    KEY_CONTINUE   shift, and go to state 65
+    KEY_IF         shift, and go to state 66
+    KEY_RETURN     shift, and go to state 67
+    KEY_SWITCH     shift, and go to state 68
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 86
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    stmt             go to state 121
+    expr_stmt        go to state 101
+    if_else_stmt     go to state 102
+    switch_stmt      go to state 103
+    while_stmt       go to state 104
+    for_stmt         go to state 105
+    compound_stmt    go to state 106
+
+
+State 63
+
+  138 while_stmt: KEY_WHILE . '(' expr ')' stmt
+
+    '('  shift, and go to state 122
+
+
+State 64
+
+  125 stmt: KEY_BREAK . ';'
+
+    ';'  shift, and go to state 123
+
+
+State 65
+
+  126 stmt: KEY_CONTINUE . ';'
+
+    ';'  shift, and go to state 124
+
+
+State 66
+
+  129 if_else_stmt: KEY_IF . '(' expr ')' compound_stmt
+  130             | KEY_IF . '(' expr ')' compound_stmt KEY_ELSE compound_stmt
+
+    '('  shift, and go to state 125
+
+
+State 67
+
+  123 stmt: KEY_RETURN . expr ';'
+  124     | KEY_RETURN . ';'
+
+    ';'            shift, and go to state 126
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 127
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 68
+
+  131 switch_stmt: KEY_SWITCH . '(' expr ')' '{' switch_clauses '}'
+
+    '('  shift, and go to state 128
+
+
+State 69
+
+   75 expr: KEY_NULL .
+
+    $default  reduce using rule 75 (expr)
+
+
+State 70
+
+  112 literal: INTEGER .
+
+    $default  reduce using rule 112 (literal)
+
+
+State 71
+
+  109 array_access: IDENTIFIER . array_dimension
+  110 variable: IDENTIFIER .
+
+    '['  shift, and go to state 37
+
+    $default  reduce using rule 110 (variable)
+
+    array_dimension  go to state 129
+
+
+State 72
+
+  113 literal: FLOATINGPOINT .
+
+    $default  reduce using rule 113 (literal)
+
+
+State 73
+
+  115 literal: STRING .
+
+    $default  reduce using rule 115 (literal)
+
+
+State 74
+
+  114 literal: CHARACTER .
+
+    $default  reduce using rule 114 (literal)
+
+
+State 75
+
+  101 address_of: '&' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 130
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 76
+
+   82 arithmetic_expr: '+' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 131
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 77
+
+   81 arithmetic_expr: '-' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 132
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 78
+
+  102 dereference: '*' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 133
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 79
+
+   89 logical_expr: '!' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 134
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 80
+
+   83 bitwise_expr: '~' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 135
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 81
+
+  103 increment: OP_INCREMENT . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 136
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 82
+
+  105 decrement: OP_DECREMENT . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 137
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 83
+
+   67 expr: '(' . expr ')'
+  107 type_cast: '(' . whole_data_type ')' expr
+  108          | '(' . whole_data_type '*' ')' expr
+
+    TYPE_CONST     shift, and go to state 1
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    $default  reduce using rule 38 (const_or_not)
+
+    whole_data_type  go to state 138
+    const_or_not     go to state 8
+    expr             go to state 139
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 84
+
+  145 in_compound: var_decl . in_compound
+  146            | var_decl .
+
+    TYPE_CONST     shift, and go to state 1
+    '{'            shift, and go to state 34
+    KEY_FOR        shift, and go to state 61
+    KEY_DO         shift, and go to state 62
+    KEY_WHILE      shift, and go to state 63
+    KEY_BREAK      shift, and go to state 64
+    KEY_CONTINUE   shift, and go to state 65
+    KEY_IF         shift, and go to state 66
+    KEY_RETURN     shift, and go to state 67
+    KEY_SWITCH     shift, and go to state 68
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    '}'       reduce using rule 146 (in_compound)
+    $default  reduce using rule 38 (const_or_not)
+
+    var_decl         go to state 84
+    whole_data_type  go to state 85
+    const_or_not     go to state 8
+    expr             go to state 86
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    stmt             go to state 100
+    expr_stmt        go to state 101
+    if_else_stmt     go to state 102
+    switch_stmt      go to state 103
+    while_stmt       go to state 104
+    for_stmt         go to state 105
+    compound_stmt    go to state 106
+    in_compound      go to state 140
+
+
+State 85
+
+   10 var_decl: whole_data_type . scalar_decl ';'
+   11         | whole_data_type . array_decl ';'
+
+    IDENTIFIER  shift, and go to state 16
+    '*'         shift, and go to state 17
+
+    scalar_decl      go to state 18
+    decl_identifier  go to state 141
+    array_decl       go to state 20
+
+
+State 86
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+  128 expr_stmt: expr . ';'
+
+    ';'              shift, and go to state 142
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+
+State 87
+
+   62 expr: arithmetic_expr .
+
+    $default  reduce using rule 62 (expr)
+
+
+State 88
+
+   63 expr: bitwise_expr .
+
+    $default  reduce using rule 63 (expr)
+
+
+State 89
+
+   64 expr: logical_expr .
+
+    $default  reduce using rule 64 (expr)
+
+
+State 90
+
+   68 expr: assign_expr .
+
+    $default  reduce using rule 68 (expr)
+
+
+State 91
+
+   69 expr: function_call .
+
+    $default  reduce using rule 69 (expr)
+
+
+State 92
+
+   70 expr: address_of .
+
+    $default  reduce using rule 70 (expr)
+
+
+State 93
+
+   71 expr: dereference .
+
+    $default  reduce using rule 71 (expr)
+
+
+State 94
+
+   72 expr: increment .
+
+    $default  reduce using rule 72 (expr)
+
+
+State 95
+
+   73 expr: decrement .
+
+    $default  reduce using rule 73 (expr)
+
+
+State 96
+
+   74 expr: type_cast .
+
+    $default  reduce using rule 74 (expr)
+
+
+State 97
+
+  111 variable: array_access .
+
+    $default  reduce using rule 111 (variable)
+
+
+State 98
+
+   65 expr: variable .
+
+    $default  reduce using rule 65 (expr)
+
+
+State 99
+
+   66 expr: literal .
+
+    $default  reduce using rule 66 (expr)
+
+
+State 100
+
+  147 in_compound: stmt . in_compound
+  148            | stmt .
+
+    TYPE_CONST     shift, and go to state 1
+    '{'            shift, and go to state 34
+    KEY_FOR        shift, and go to state 61
+    KEY_DO         shift, and go to state 62
+    KEY_WHILE      shift, and go to state 63
+    KEY_BREAK      shift, and go to state 64
+    KEY_CONTINUE   shift, and go to state 65
+    KEY_IF         shift, and go to state 66
+    KEY_RETURN     shift, and go to state 67
+    KEY_SWITCH     shift, and go to state 68
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    '}'       reduce using rule 148 (in_compound)
+    $default  reduce using rule 38 (const_or_not)
+
+    var_decl         go to state 84
+    whole_data_type  go to state 85
+    const_or_not     go to state 8
+    expr             go to state 86
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    stmt             go to state 100
+    expr_stmt        go to state 101
+    if_else_stmt     go to state 102
+    switch_stmt      go to state 103
+    while_stmt       go to state 104
+    for_stmt         go to state 105
+    compound_stmt    go to state 106
+    in_compound      go to state 165
+
+
+State 101
+
+  118 stmt: expr_stmt .
+
+    $default  reduce using rule 118 (stmt)
+
+
+State 102
+
+  119 stmt: if_else_stmt .
+
+    $default  reduce using rule 119 (stmt)
+
+
+State 103
+
+  120 stmt: switch_stmt .
+
+    $default  reduce using rule 120 (stmt)
+
+
+State 104
+
+  121 stmt: while_stmt .
+
+    $default  reduce using rule 121 (stmt)
+
+
+State 105
+
+  122 stmt: for_stmt .
+
+    $default  reduce using rule 122 (stmt)
+
+
+State 106
+
+  127 stmt: compound_stmt .
+
+    $default  reduce using rule 127 (stmt)
+
+
+State 107
+
+  144 compound_stmt: '{' in_compound . '}'
+
+    '}'  shift, and go to state 166
+
+
+State 108
+
+   20 array_dimension: '[' expr . ']' array_dimension
+   21                | '[' expr . ']'
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    ']'              shift, and go to state 167
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+
+State 109
+
+   22 array_initializer: '=' . '{' number_list '}'
+   23                  | '=' . '{' '}'
+
+    '{'  shift, and go to state 168
+
+
+State 110
+
+   19 array_decl: IDENTIFIER array_dimension array_initializer .
+
+    $default  reduce using rule 19 (array_decl)
+
+
+State 111
+
+   12 scalar_decl: scalar_decl ',' decl_identifier . initializer
+
+    '='  shift, and go to state 42
+
+    $default  reduce using rule 17 (initializer)
+
+    initializer  go to state 169
+
+
+State 112
+
+   16 initializer: '=' expr .
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 16 (initializer)
+
+
+State 113
+
+   29 func_decl: whole_data_type decl_identifier '(' ')' . ';'
+
+    ';'  shift, and go to state 170
+
+
+State 114
+
+   28 func_decl: whole_data_type decl_identifier '(' parameter_list . ')' ';'
+   30 parameter_list: parameter_list . ',' parameter_whole_data_type decl_identifier
+
+    ','  shift, and go to state 57
+    ')'  shift, and go to state 171
+
+
+State 115
+
+   18 array_decl: array_decl ',' IDENTIFIER . array_dimension array_initializer
+
+    '['  shift, and go to state 37
+
+    array_dimension  go to state 172
+
+
+State 116
+
+   42 int_specifier: TYPE_LONG TYPE_LONG .
+   46 ll_l_sh_ch: TYPE_LONG TYPE_LONG .
+
+    TYPE_INT  reduce using rule 42 (int_specifier)
+    $default  reduce using rule 46 (ll_l_sh_ch)
+
+
+State 117
+
+   33 whole_data_type: const_or_not signed_or_not int_specifier TYPE_INT .
+
+    $default  reduce using rule 33 (whole_data_type)
+
+
+State 118
+
+   30 parameter_list: parameter_list ',' parameter_whole_data_type . decl_identifier
+
+    IDENTIFIER  shift, and go to state 54
+    '*'         shift, and go to state 17
+
+    decl_identifier  go to state 173
+
+
+State 119
+
+   59 func_def_header: func_name_decl parameter_list '(' ')' .
+
+    $default  reduce using rule 59 (func_def_header)
+
+
+State 120
+
+  140 for_stmt: KEY_FOR '(' . expr_or_noexpr ';' expr_or_noexpr ';' expr_or_noexpr ')' stmt
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    $default  reduce using rule 142 (expr_or_noexpr)
+
+    expr             go to state 174
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    expr_or_noexpr   go to state 175
+
+
+State 121
+
+  139 while_stmt: KEY_DO stmt . KEY_WHILE '(' expr ')' ';'
+
+    KEY_WHILE  shift, and go to state 176
+
+
+State 122
+
+  138 while_stmt: KEY_WHILE '(' . expr ')' stmt
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 177
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 123
+
+  125 stmt: KEY_BREAK ';' .
+
+    $default  reduce using rule 125 (stmt)
+
+
+State 124
+
+  126 stmt: KEY_CONTINUE ';' .
+
+    $default  reduce using rule 126 (stmt)
+
+
+State 125
+
+  129 if_else_stmt: KEY_IF '(' . expr ')' compound_stmt
+  130             | KEY_IF '(' . expr ')' compound_stmt KEY_ELSE compound_stmt
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 178
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 126
+
+  124 stmt: KEY_RETURN ';' .
+
+    $default  reduce using rule 124 (stmt)
+
+
+State 127
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+  123 stmt: KEY_RETURN expr . ';'
+
+    ';'              shift, and go to state 179
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+
+State 128
+
+  131 switch_stmt: KEY_SWITCH '(' . expr ')' '{' switch_clauses '}'
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 180
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 129
+
+  109 array_access: IDENTIFIER array_dimension .
+
+    $default  reduce using rule 109 (array_access)
+
+
+State 130
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  101 address_of: '&' expr .
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 101 (address_of)
+
+
+State 131
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   82                | '+' expr .
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 82 (arithmetic_expr)
+
+
+State 132
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   81                | '-' expr .
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 81 (arithmetic_expr)
+
+
+State 133
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  102 dereference: '*' expr .
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 102 (dereference)
+
+
+State 134
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   89 logical_expr: '!' expr .
+   90             | expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 89 (logical_expr)
+
+
+State 135
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   83 bitwise_expr: '~' expr .
+   84             | expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 83 (bitwise_expr)
+
+
+State 136
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  103 increment: OP_INCREMENT expr .
+  104          | expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 103 (increment)
+
+
+State 137
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  105 decrement: OP_DECREMENT expr .
+  106          | expr . OP_DECREMENT
+
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 105 (decrement)
+
+
+State 138
+
+  107 type_cast: '(' whole_data_type . ')' expr
+  108          | '(' whole_data_type . '*' ')' expr
+
+    '*'  shift, and go to state 181
+    ')'  shift, and go to state 182
+
+
+State 139
+
+   67 expr: '(' expr . ')'
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    ')'              shift, and go to state 183
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+
+State 140
+
+  145 in_compound: var_decl in_compound .
+
+    $default  reduce using rule 145 (in_compound)
+
+
+State 141
+
+   13 scalar_decl: decl_identifier . initializer
+
+    '='  shift, and go to state 42
+
+    $default  reduce using rule 17 (initializer)
+
+    initializer  go to state 44
+
+
+State 142
+
+  128 expr_stmt: expr ';' .
+
+    $default  reduce using rule 128 (expr_stmt)
+
+
+State 143
+
+   98 assign_expr: expr '=' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 184
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 144
+
+   90 logical_expr: expr OP_LOGICALOR . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 185
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 145
+
+   91 logical_expr: expr OP_LOGICALAND . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 186
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 146
+
+   86 bitwise_expr: expr '|' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 187
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 147
+
+   85 bitwise_expr: expr '^' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 188
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 148
+
+   84 bitwise_expr: expr '&' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 189
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 149
+
+   92 logical_expr: expr OP_EQUAL . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 190
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 150
+
+   93 logical_expr: expr OP_NOTEQUAL . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 191
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 151
+
+   96 logical_expr: expr '<' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 192
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 152
+
+   97 logical_expr: expr '>' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 193
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 153
+
+   94 logical_expr: expr OP_LESSEQUAL . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 194
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 154
+
+   95 logical_expr: expr OP_GREATEREQUAL . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 195
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 155
+
+   88 bitwise_expr: expr OP_SHIFTRIGHT . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 196
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 156
+
+   87 bitwise_expr: expr OP_SHIFTLEFT . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 197
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 157
+
+   76 arithmetic_expr: expr '+' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 198
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 158
+
+   77 arithmetic_expr: expr '-' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 199
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 159
+
+   78 arithmetic_expr: expr '*' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 200
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 160
+
+   79 arithmetic_expr: expr '/' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 201
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 161
+
+   80 arithmetic_expr: expr '%' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 202
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 162
+
+  104 increment: expr OP_INCREMENT .
+
+    $default  reduce using rule 104 (increment)
+
+
+State 163
+
+  106 decrement: expr OP_DECREMENT .
+
+    $default  reduce using rule 106 (decrement)
+
+
+State 164
+
+   99 function_call: expr '(' . exprs ')'
+  100              | expr '(' . ')'
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    ')'            shift, and go to state 203
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 204
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    exprs            go to state 205
+
+
+State 165
+
+  147 in_compound: stmt in_compound .
+
+    $default  reduce using rule 147 (in_compound)
+
+
+State 166
+
+  144 compound_stmt: '{' in_compound '}' .
+
+    $default  reduce using rule 144 (compound_stmt)
+
+
+State 167
+
+   20 array_dimension: '[' expr ']' . array_dimension
+   21                | '[' expr ']' .
+
+    '['  shift, and go to state 37
+
+    $default  reduce using rule 21 (array_dimension)
+
+    array_dimension  go to state 206
+
+
+State 168
+
+   22 array_initializer: '=' '{' . number_list '}'
+   23                  | '=' '{' . '}'
+
+    '{'            shift, and go to state 207
+    '}'            shift, and go to state 208
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    number_list      go to state 209
+    expr             go to state 204
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    exprs            go to state 210
+
+
+State 169
+
+   12 scalar_decl: scalar_decl ',' decl_identifier initializer .
+
+    $default  reduce using rule 12 (scalar_decl)
+
+
+State 170
+
+   29 func_decl: whole_data_type decl_identifier '(' ')' ';' .
+
+    $default  reduce using rule 29 (func_decl)
+
+
+State 171
+
+   28 func_decl: whole_data_type decl_identifier '(' parameter_list ')' . ';'
+
+    ';'  shift, and go to state 211
+
+
+State 172
+
+   18 array_decl: array_decl ',' IDENTIFIER array_dimension . array_initializer
+
+    '='  shift, and go to state 109
+
+    $default  reduce using rule 24 (array_initializer)
+
+    array_initializer  go to state 212
+
+
+State 173
+
+   30 parameter_list: parameter_list ',' parameter_whole_data_type decl_identifier .
+
+    $default  reduce using rule 30 (parameter_list)
+
+
+State 174
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+  141 expr_or_noexpr: expr .
+
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 141 (expr_or_noexpr)
+
+
+State 175
+
+  140 for_stmt: KEY_FOR '(' expr_or_noexpr . ';' expr_or_noexpr ';' expr_or_noexpr ')' stmt
+
+    ';'  shift, and go to state 213
+
+
+State 176
+
+  139 while_stmt: KEY_DO stmt KEY_WHILE . '(' expr ')' ';'
+
+    '('  shift, and go to state 214
+
+
+State 177
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+  138 while_stmt: KEY_WHILE '(' expr . ')' stmt
+
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    ')'              shift, and go to state 215
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+
+State 178
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+  129 if_else_stmt: KEY_IF '(' expr . ')' compound_stmt
+  130             | KEY_IF '(' expr . ')' compound_stmt KEY_ELSE compound_stmt
+
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    ')'              shift, and go to state 216
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+
+State 179
+
+  123 stmt: KEY_RETURN expr ';' .
+
+    $default  reduce using rule 123 (stmt)
+
+
+State 180
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+  131 switch_stmt: KEY_SWITCH '(' expr . ')' '{' switch_clauses '}'
+
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    ')'              shift, and go to state 217
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+
+State 181
+
+  108 type_cast: '(' whole_data_type '*' . ')' expr
+
+    ')'  shift, and go to state 218
+
+
+State 182
+
+  107 type_cast: '(' whole_data_type ')' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 219
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 183
+
+   67 expr: '(' expr ')' .
+
+    $default  reduce using rule 67 (expr)
+
+
+State 184
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   98            | expr '=' expr .
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 98 (assign_expr)
+
+
+State 185
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   90             | expr OP_LOGICALOR expr .
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 90 (logical_expr)
+
+
+State 186
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   91             | expr OP_LOGICALAND expr .
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 91 (logical_expr)
+
+
+State 187
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   86             | expr '|' expr .
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 86 (bitwise_expr)
+
+
+State 188
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   85             | expr '^' expr .
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 85 (bitwise_expr)
+
+
+State 189
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   84             | expr '&' expr .
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 84 (bitwise_expr)
+
+
+State 190
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   92             | expr OP_EQUAL expr .
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 92 (logical_expr)
+
+
+State 191
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   93             | expr OP_NOTEQUAL expr .
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 93 (logical_expr)
+
+
+State 192
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   96             | expr '<' expr .
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_SHIFTRIGHT  shift, and go to state 155
+    OP_SHIFTLEFT   shift, and go to state 156
+    '+'            shift, and go to state 157
+    '-'            shift, and go to state 158
+    '*'            shift, and go to state 159
+    '/'            shift, and go to state 160
+    '%'            shift, and go to state 161
+    OP_INCREMENT   shift, and go to state 162
+    OP_DECREMENT   shift, and go to state 163
+    '('            shift, and go to state 164
+
+    $default  reduce using rule 96 (logical_expr)
+
+
+State 193
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   97             | expr '>' expr .
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_SHIFTRIGHT  shift, and go to state 155
+    OP_SHIFTLEFT   shift, and go to state 156
+    '+'            shift, and go to state 157
+    '-'            shift, and go to state 158
+    '*'            shift, and go to state 159
+    '/'            shift, and go to state 160
+    '%'            shift, and go to state 161
+    OP_INCREMENT   shift, and go to state 162
+    OP_DECREMENT   shift, and go to state 163
+    '('            shift, and go to state 164
+
+    $default  reduce using rule 97 (logical_expr)
+
+
+State 194
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   94             | expr OP_LESSEQUAL expr .
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_SHIFTRIGHT  shift, and go to state 155
+    OP_SHIFTLEFT   shift, and go to state 156
+    '+'            shift, and go to state 157
+    '-'            shift, and go to state 158
+    '*'            shift, and go to state 159
+    '/'            shift, and go to state 160
+    '%'            shift, and go to state 161
+    OP_INCREMENT   shift, and go to state 162
+    OP_DECREMENT   shift, and go to state 163
+    '('            shift, and go to state 164
+
+    $default  reduce using rule 94 (logical_expr)
+
+
+State 195
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   95             | expr OP_GREATEREQUAL expr .
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_SHIFTRIGHT  shift, and go to state 155
+    OP_SHIFTLEFT   shift, and go to state 156
+    '+'            shift, and go to state 157
+    '-'            shift, and go to state 158
+    '*'            shift, and go to state 159
+    '/'            shift, and go to state 160
+    '%'            shift, and go to state 161
+    OP_INCREMENT   shift, and go to state 162
+    OP_DECREMENT   shift, and go to state 163
+    '('            shift, and go to state 164
+
+    $default  reduce using rule 95 (logical_expr)
+
+
+State 196
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   88             | expr OP_SHIFTRIGHT expr .
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    '+'           shift, and go to state 157
+    '-'           shift, and go to state 158
+    '*'           shift, and go to state 159
+    '/'           shift, and go to state 160
+    '%'           shift, and go to state 161
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 88 (bitwise_expr)
+
+
+State 197
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   87             | expr OP_SHIFTLEFT expr .
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    '+'           shift, and go to state 157
+    '-'           shift, and go to state 158
+    '*'           shift, and go to state 159
+    '/'           shift, and go to state 160
+    '%'           shift, and go to state 161
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 87 (bitwise_expr)
+
+
+State 198
+
+   76 arithmetic_expr: expr . '+' expr
+   76                | expr '+' expr .
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    '*'           shift, and go to state 159
+    '/'           shift, and go to state 160
+    '%'           shift, and go to state 161
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 76 (arithmetic_expr)
+
+
+State 199
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   77                | expr '-' expr .
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    '*'           shift, and go to state 159
+    '/'           shift, and go to state 160
+    '%'           shift, and go to state 161
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 77 (arithmetic_expr)
+
+
+State 200
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   78                | expr '*' expr .
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 78 (arithmetic_expr)
+
+
+State 201
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   79                | expr '/' expr .
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 79 (arithmetic_expr)
+
+
+State 202
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   80                | expr '%' expr .
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 80 (arithmetic_expr)
+
+
+State 203
+
+  100 function_call: expr '(' ')' .
+
+    $default  reduce using rule 100 (function_call)
+
+
+State 204
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+  117 exprs: expr .
+
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 117 (exprs)
+
+
+State 205
+
+   99 function_call: expr '(' exprs . ')'
+  116 exprs: exprs . ',' expr
+
+    ','  shift, and go to state 220
+    ')'  shift, and go to state 221
+
+
+State 206
+
+   20 array_dimension: '[' expr ']' array_dimension .
+
+    $default  reduce using rule 20 (array_dimension)
+
+
+State 207
+
+   26 number_list: '{' . number_list '}' ',' number_list
+   27            | '{' . number_list '}'
+
+    '{'            shift, and go to state 207
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    number_list      go to state 222
+    expr             go to state 204
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    exprs            go to state 210
+
+
+State 208
+
+   23 array_initializer: '=' '{' '}' .
+
+    $default  reduce using rule 23 (array_initializer)
+
+
+State 209
+
+   22 array_initializer: '=' '{' number_list . '}'
+
+    '}'  shift, and go to state 223
+
+
+State 210
+
+   25 number_list: exprs .
+  116 exprs: exprs . ',' expr
+
+    ','  shift, and go to state 220
+
+    $default  reduce using rule 25 (number_list)
+
+
+State 211
+
+   28 func_decl: whole_data_type decl_identifier '(' parameter_list ')' ';' .
+
+    $default  reduce using rule 28 (func_decl)
+
+
+State 212
+
+   18 array_decl: array_decl ',' IDENTIFIER array_dimension array_initializer .
+
+    $default  reduce using rule 18 (array_decl)
+
+
+State 213
+
+  140 for_stmt: KEY_FOR '(' expr_or_noexpr ';' . expr_or_noexpr ';' expr_or_noexpr ')' stmt
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    $default  reduce using rule 142 (expr_or_noexpr)
+
+    expr             go to state 174
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    expr_or_noexpr   go to state 224
+
+
+State 214
+
+  139 while_stmt: KEY_DO stmt KEY_WHILE '(' . expr ')' ';'
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 225
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 215
+
+  138 while_stmt: KEY_WHILE '(' expr ')' . stmt
+
+    '{'            shift, and go to state 34
+    KEY_FOR        shift, and go to state 61
+    KEY_DO         shift, and go to state 62
+    KEY_WHILE      shift, and go to state 63
+    KEY_BREAK      shift, and go to state 64
+    KEY_CONTINUE   shift, and go to state 65
+    KEY_IF         shift, and go to state 66
+    KEY_RETURN     shift, and go to state 67
+    KEY_SWITCH     shift, and go to state 68
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 86
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    stmt             go to state 226
+    expr_stmt        go to state 101
+    if_else_stmt     go to state 102
+    switch_stmt      go to state 103
+    while_stmt       go to state 104
+    for_stmt         go to state 105
+    compound_stmt    go to state 106
+
+
+State 216
+
+  129 if_else_stmt: KEY_IF '(' expr ')' . compound_stmt
+  130             | KEY_IF '(' expr ')' . compound_stmt KEY_ELSE compound_stmt
+
+    '{'  shift, and go to state 34
+
+    compound_stmt  go to state 227
+
+
+State 217
+
+  131 switch_stmt: KEY_SWITCH '(' expr ')' . '{' switch_clauses '}'
+
+    '{'  shift, and go to state 228
+
+
+State 218
+
+  108 type_cast: '(' whole_data_type '*' ')' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 229
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 219
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+  107 type_cast: '(' whole_data_type ')' expr .
+
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 107 (type_cast)
+
+
+State 220
+
+  116 exprs: exprs ',' . expr
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 230
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 221
+
+   99 function_call: expr '(' exprs ')' .
+
+    $default  reduce using rule 99 (function_call)
+
+
+State 222
+
+   26 number_list: '{' number_list . '}' ',' number_list
+   27            | '{' number_list . '}'
+
+    '}'  shift, and go to state 231
+
+
+State 223
+
+   22 array_initializer: '=' '{' number_list '}' .
+
+    $default  reduce using rule 22 (array_initializer)
+
+
+State 224
+
+  140 for_stmt: KEY_FOR '(' expr_or_noexpr ';' expr_or_noexpr . ';' expr_or_noexpr ')' stmt
+
+    ';'  shift, and go to state 232
+
+
+State 225
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+  139 while_stmt: KEY_DO stmt KEY_WHILE '(' expr . ')' ';'
+
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    ')'              shift, and go to state 233
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+
+State 226
+
+  138 while_stmt: KEY_WHILE '(' expr ')' stmt .
+
+    $default  reduce using rule 138 (while_stmt)
+
+
+State 227
+
+  129 if_else_stmt: KEY_IF '(' expr ')' compound_stmt .
+  130             | KEY_IF '(' expr ')' compound_stmt . KEY_ELSE compound_stmt
+
+    KEY_ELSE  shift, and go to state 234
+
+    $default  reduce using rule 129 (if_else_stmt)
+
+
+State 228
+
+  131 switch_stmt: KEY_SWITCH '(' expr ')' '{' . switch_clauses '}'
+
+    KEY_CASE     shift, and go to state 235
+    KEY_DEFAULT  shift, and go to state 236
+
+    switch_clauses  go to state 237
+
+
+State 229
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+  108 type_cast: '(' whole_data_type '*' ')' expr .
+
+    OP_INCREMENT  shift, and go to state 162
+    OP_DECREMENT  shift, and go to state 163
+    '('           shift, and go to state 164
+
+    $default  reduce using rule 108 (type_cast)
+
+
+State 230
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+  116 exprs: exprs ',' expr .
+
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+
+    $default  reduce using rule 116 (exprs)
+
+
+State 231
+
+   26 number_list: '{' number_list '}' . ',' number_list
+   27            | '{' number_list '}' .
+
+    ','  shift, and go to state 238
+
+    $default  reduce using rule 27 (number_list)
+
+
+State 232
+
+  140 for_stmt: KEY_FOR '(' expr_or_noexpr ';' expr_or_noexpr ';' . expr_or_noexpr ')' stmt
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    $default  reduce using rule 142 (expr_or_noexpr)
+
+    expr             go to state 174
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    expr_or_noexpr   go to state 239
+
+
+State 233
+
+  139 while_stmt: KEY_DO stmt KEY_WHILE '(' expr ')' . ';'
+
+    ';'  shift, and go to state 240
+
+
+State 234
+
+  130 if_else_stmt: KEY_IF '(' expr ')' compound_stmt KEY_ELSE . compound_stmt
+
+    '{'  shift, and go to state 34
+
+    compound_stmt  go to state 241
+
+
+State 235
+
+  132 switch_clauses: KEY_CASE . expr ':' stmts switch_clauses
+  133               | KEY_CASE . expr ':' stmts
+
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 242
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+
+
+State 236
+
+  134 switch_clauses: KEY_DEFAULT . ':' stmts switch_clauses
+  135               | KEY_DEFAULT . ':' stmts
+
+    ':'  shift, and go to state 243
+
+
+State 237
+
+  131 switch_stmt: KEY_SWITCH '(' expr ')' '{' switch_clauses . '}'
+
+    '}'  shift, and go to state 244
+
+
+State 238
+
+   26 number_list: '{' number_list '}' ',' . number_list
+
+    '{'            shift, and go to state 207
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    number_list      go to state 245
+    expr             go to state 204
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    exprs            go to state 210
+
+
+State 239
+
+  140 for_stmt: KEY_FOR '(' expr_or_noexpr ';' expr_or_noexpr ';' expr_or_noexpr . ')' stmt
+
+    ')'  shift, and go to state 246
+
+
+State 240
+
+  139 while_stmt: KEY_DO stmt KEY_WHILE '(' expr ')' ';' .
+
+    $default  reduce using rule 139 (while_stmt)
+
+
+State 241
+
+  130 if_else_stmt: KEY_IF '(' expr ')' compound_stmt KEY_ELSE compound_stmt .
+
+    $default  reduce using rule 130 (if_else_stmt)
+
+
+State 242
+
+   76 arithmetic_expr: expr . '+' expr
+   77                | expr . '-' expr
+   78                | expr . '*' expr
+   79                | expr . '/' expr
+   80                | expr . '%' expr
+   84 bitwise_expr: expr . '&' expr
+   85             | expr . '^' expr
+   86             | expr . '|' expr
+   87             | expr . OP_SHIFTLEFT expr
+   88             | expr . OP_SHIFTRIGHT expr
+   90 logical_expr: expr . OP_LOGICALOR expr
+   91             | expr . OP_LOGICALAND expr
+   92             | expr . OP_EQUAL expr
+   93             | expr . OP_NOTEQUAL expr
+   94             | expr . OP_LESSEQUAL expr
+   95             | expr . OP_GREATEREQUAL expr
+   96             | expr . '<' expr
+   97             | expr . '>' expr
+   98 assign_expr: expr . '=' expr
+   99 function_call: expr . '(' exprs ')'
+  100              | expr . '(' ')'
+  104 increment: expr . OP_INCREMENT
+  106 decrement: expr . OP_DECREMENT
+  132 switch_clauses: KEY_CASE expr . ':' stmts switch_clauses
+  133               | KEY_CASE expr . ':' stmts
+
+    '='              shift, and go to state 143
+    OP_LOGICALOR     shift, and go to state 144
+    OP_LOGICALAND    shift, and go to state 145
+    '|'              shift, and go to state 146
+    '^'              shift, and go to state 147
+    '&'              shift, and go to state 148
+    OP_EQUAL         shift, and go to state 149
+    OP_NOTEQUAL      shift, and go to state 150
+    '<'              shift, and go to state 151
+    '>'              shift, and go to state 152
+    OP_LESSEQUAL     shift, and go to state 153
+    OP_GREATEREQUAL  shift, and go to state 154
+    OP_SHIFTRIGHT    shift, and go to state 155
+    OP_SHIFTLEFT     shift, and go to state 156
+    '+'              shift, and go to state 157
+    '-'              shift, and go to state 158
+    '*'              shift, and go to state 159
+    '/'              shift, and go to state 160
+    '%'              shift, and go to state 161
+    OP_INCREMENT     shift, and go to state 162
+    OP_DECREMENT     shift, and go to state 163
+    '('              shift, and go to state 164
+    ':'              shift, and go to state 247
+
+
+State 243
+
+  134 switch_clauses: KEY_DEFAULT ':' . stmts switch_clauses
+  135               | KEY_DEFAULT ':' . stmts
+
+    '{'            shift, and go to state 34
+    KEY_FOR        shift, and go to state 61
+    KEY_DO         shift, and go to state 62
+    KEY_WHILE      shift, and go to state 63
+    KEY_BREAK      shift, and go to state 64
+    KEY_CONTINUE   shift, and go to state 65
+    KEY_IF         shift, and go to state 66
+    KEY_RETURN     shift, and go to state 67
+    KEY_SWITCH     shift, and go to state 68
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 86
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    stmt             go to state 248
+    expr_stmt        go to state 101
+    if_else_stmt     go to state 102
+    switch_stmt      go to state 103
+    stmts            go to state 249
+    while_stmt       go to state 104
+    for_stmt         go to state 105
+    compound_stmt    go to state 106
+
+
+State 244
+
+  131 switch_stmt: KEY_SWITCH '(' expr ')' '{' switch_clauses '}' .
+
+    $default  reduce using rule 131 (switch_stmt)
+
+
+State 245
+
+   26 number_list: '{' number_list '}' ',' number_list .
+
+    $default  reduce using rule 26 (number_list)
+
+
+State 246
+
+  140 for_stmt: KEY_FOR '(' expr_or_noexpr ';' expr_or_noexpr ';' expr_or_noexpr ')' . stmt
+
+    '{'            shift, and go to state 34
+    KEY_FOR        shift, and go to state 61
+    KEY_DO         shift, and go to state 62
+    KEY_WHILE      shift, and go to state 63
+    KEY_BREAK      shift, and go to state 64
+    KEY_CONTINUE   shift, and go to state 65
+    KEY_IF         shift, and go to state 66
+    KEY_RETURN     shift, and go to state 67
+    KEY_SWITCH     shift, and go to state 68
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 86
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    stmt             go to state 250
+    expr_stmt        go to state 101
+    if_else_stmt     go to state 102
+    switch_stmt      go to state 103
+    while_stmt       go to state 104
+    for_stmt         go to state 105
+    compound_stmt    go to state 106
+
+
+State 247
+
+  132 switch_clauses: KEY_CASE expr ':' . stmts switch_clauses
+  133               | KEY_CASE expr ':' . stmts
+
+    '{'            shift, and go to state 34
+    KEY_FOR        shift, and go to state 61
+    KEY_DO         shift, and go to state 62
+    KEY_WHILE      shift, and go to state 63
+    KEY_BREAK      shift, and go to state 64
+    KEY_CONTINUE   shift, and go to state 65
+    KEY_IF         shift, and go to state 66
+    KEY_RETURN     shift, and go to state 67
+    KEY_SWITCH     shift, and go to state 68
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    expr             go to state 86
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    stmt             go to state 248
+    expr_stmt        go to state 101
+    if_else_stmt     go to state 102
+    switch_stmt      go to state 103
+    stmts            go to state 251
+    while_stmt       go to state 104
+    for_stmt         go to state 105
+    compound_stmt    go to state 106
+
+
+State 248
+
+  136 stmts: stmt . stmts
+  137      | stmt .
+
+    '{'            shift, and go to state 34
+    KEY_FOR        shift, and go to state 61
+    KEY_DO         shift, and go to state 62
+    KEY_WHILE      shift, and go to state 63
+    KEY_BREAK      shift, and go to state 64
+    KEY_CONTINUE   shift, and go to state 65
+    KEY_IF         shift, and go to state 66
+    KEY_RETURN     shift, and go to state 67
+    KEY_SWITCH     shift, and go to state 68
+    KEY_NULL       shift, and go to state 69
+    INTEGER        shift, and go to state 70
+    IDENTIFIER     shift, and go to state 71
+    FLOATINGPOINT  shift, and go to state 72
+    STRING         shift, and go to state 73
+    CHARACTER      shift, and go to state 74
+    '&'            shift, and go to state 75
+    '+'            shift, and go to state 76
+    '-'            shift, and go to state 77
+    '*'            shift, and go to state 78
+    '!'            shift, and go to state 79
+    '~'            shift, and go to state 80
+    OP_INCREMENT   shift, and go to state 81
+    OP_DECREMENT   shift, and go to state 82
+    '('            shift, and go to state 83
+
+    $default  reduce using rule 137 (stmts)
+
+    expr             go to state 86
+    arithmetic_expr  go to state 87
+    bitwise_expr     go to state 88
+    logical_expr     go to state 89
+    assign_expr      go to state 90
+    function_call    go to state 91
+    address_of       go to state 92
+    dereference      go to state 93
+    increment        go to state 94
+    decrement        go to state 95
+    type_cast        go to state 96
+    array_access     go to state 97
+    variable         go to state 98
+    literal          go to state 99
+    stmt             go to state 248
+    expr_stmt        go to state 101
+    if_else_stmt     go to state 102
+    switch_stmt      go to state 103
+    stmts            go to state 252
+    while_stmt       go to state 104
+    for_stmt         go to state 105
+    compound_stmt    go to state 106
+
+
+State 249
+
+  134 switch_clauses: KEY_DEFAULT ':' stmts . switch_clauses
+  135               | KEY_DEFAULT ':' stmts .
+
+    KEY_CASE     shift, and go to state 235
+    KEY_DEFAULT  shift, and go to state 236
+
+    $default  reduce using rule 135 (switch_clauses)
+
+    switch_clauses  go to state 253
+
+
+State 250
+
+  140 for_stmt: KEY_FOR '(' expr_or_noexpr ';' expr_or_noexpr ';' expr_or_noexpr ')' stmt .
+
+    $default  reduce using rule 140 (for_stmt)
+
+
+State 251
+
+  132 switch_clauses: KEY_CASE expr ':' stmts . switch_clauses
+  133               | KEY_CASE expr ':' stmts .
+
+    KEY_CASE     shift, and go to state 235
+    KEY_DEFAULT  shift, and go to state 236
+
+    $default  reduce using rule 133 (switch_clauses)
+
+    switch_clauses  go to state 254
+
+
+State 252
+
+  136 stmts: stmt stmts .
+
+    $default  reduce using rule 136 (stmts)
+
+
+State 253
+
+  134 switch_clauses: KEY_DEFAULT ':' stmts switch_clauses .
+
+    $default  reduce using rule 134 (switch_clauses)
+
+
+State 254
+
+  132 switch_clauses: KEY_CASE expr ':' stmts switch_clauses .
+
+    $default  reduce using rule 132 (switch_clauses)
