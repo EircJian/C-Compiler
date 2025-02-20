@@ -1,11 +1,11 @@
 # Simple C Compiler
 
-This project is a simple C compiler that demonstrates the classic compiler components (lexical analysis, parsing, semantic actions, and code generation). The compiler uses Flex to generate the scanner and Byacc to generate the parser. Code generation and symbol table management are implemented in C using supporting files such as `table.h` and `expr_type.h`.
+This project is a simple C compiler that demonstrates the classic compiler components (lexical analysis, parsing, semantic actions, and code generation). The compiler uses Flex to generate the scanner and Yacc to generate the parser. Code generation and symbol table management are implemented in C using supporting files such as `table.h` and `expr_type.h`.
 
 ## Features
 
 - **Lexical Analysis**: `scanner.l` contains the Flex definitions and rules for tokenizing the input.  
-- **Parsing**: `parser.y` contains the Byacc grammar, semantic actions, and code generation routines.  
+- **Parsing**: `parser.y` contains the Yacc grammar, semantic actions, and code generation routines.  
 - **Code Generation**: Translates C-like code into assembly.
     - `table.h`: Defines the symbol table structure and related variables.  
     - `expr_type.h`: Defines the expression data type structure used during parsing and code generation.
